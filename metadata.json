@@ -1,0 +1,6 @@
+{
+  "name": "Rożek Invest",
+  "description": "Profesjonalna strona internetowa dla prywatnych apartamentów wakacyjnych w Portugalii, z obsługą wielu języków i nowoczesnym designem.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

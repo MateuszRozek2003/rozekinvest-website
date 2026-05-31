@@ -1,0 +1,17 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /bookings/{bookingId} {
+      // Bezpieczeństwo: tymczasowo pozwalamy na publiczny dostęp do kalendarza
+      allow read: if true;
+      // Backend (webhook) ma specjalny sekret
+      allow write: if request.resource.data.webhookSecret == "studio_webhook_secret";
+    }
+    // Global safety net: default deny all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+

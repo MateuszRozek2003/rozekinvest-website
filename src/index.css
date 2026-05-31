@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-brand-navy: var(--brand-navy);
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-cream: var(--brand-cream);
+  --color-brand-sand: var(--brand-sand);
+  --color-brand-copper: var(--brand-copper);
+  --color-brand-green: var(--brand-green);
+  --color-brand-whatsapp: #25D366;
+
+  --color-bg-white: var(--bg-surface);
+  --color-bg-slate-50: var(--bg-surface-alt);
+
+  --font-sans: 'Montserrat', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Cormorant Garamond', ui-serif, Georgia, serif;
+}
+
+@layer base {
+  :root {
+    --brand-navy: #1D3557;
+    --brand-blue: #A8DADC;
+    --brand-cream: #FDFBF7;
+    --brand-sand: #EAE0D5;
+    --brand-copper: #C5A059;
+    --brand-green: #829E85;
+    --bg-surface: #ffffff;
+    --bg-surface-alt: #f8fafc; /* slate-50 */
+  }
+
+  /* We do NOT redefine --brand-navy here for text, 
+     because doing so would ruin bg-brand-navy buttons. 
+     Instead, we use dedicated color overrides below */
+  .dark {
+    --brand-blue: #2dd4bf;
+    --brand-cream: #000000; /* Pure black / VERY dark mode per user request */
+    --brand-sand: #111111;
+    --brand-copper: #E6B97A;
+    --brand-green: #86efac;
+    --bg-surface: #0a0a0a; 
+    --bg-surface-alt: #111111; 
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply font-sans text-brand-navy bg-brand-cream antialiased selection:bg-brand-copper selection:text-white transition-colors duration-300;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif text-brand-navy;
+  }
+}
+
+@layer utilities {
+  /* BACKGROUND OVERRIDES for dark mode */
+  .dark .bg-white { background-color: var(--bg-surface) !important; }
+  .dark .bg-slate-50 { background-color: var(--bg-surface-alt) !important; }
+  .dark .bg-white\/80 { background-color: rgba(10, 10, 10, 0.8) !important; }
+  .dark .bg-\[\#faf8f5\] { background-color: #111111 !important; }
+  .dark .bg-brand-sand { background-color: #111111 !important; }
+  .dark .bg-black\/5 { background-color: rgba(255, 255, 255, 0.1) !important; }
+
+  /* BORDER OVERRIDES for dark mode */
+  .dark .border-slate-100 { border-color: #222 !important; }
+  .dark .border-slate-200 { border-color: #222 !important; }
+  .dark .border-black\/5 { border-color: rgba(255, 255, 255, 0.1) !important; }
+  .dark .border-brand-navy { border-color: #222 !important; }
+  .dark .border-white { border-color: #222 !important; }
+  .dark .border-\[\#e0e0e0\] { border-color: #222 !important; }
+  .dark .border-\[\#f0f0f0\] { border-color: #222 !important; }
+
+  /* TEXT overrides to map Brand Navy -> White in dark mode */
+  .dark .text-brand-navy { color: #f8fafc !important; }
+  .dark .text-brand-navy\/50 { color: rgba(248, 250, 252, 0.5) !important; }
+  .dark .text-brand-navy\/60 { color: rgba(248, 250, 252, 0.6) !important; }
+  .dark .text-brand-navy\/70 { color: rgba(248, 250, 252, 0.7) !important; }
+  .dark .text-brand-navy\/80 { color: rgba(248, 250, 252, 0.8) !important; }
+
+  /* Make slate text visible on black */
+  .dark .text-slate-400 { color: #9ca3af !important; }
+  .dark .text-slate-500 { color: #cbd5e1 !important; }
+  .dark .text-slate-600 { color: #e2e8f0 !important; }
+  .dark .text-slate-700 { color: #f1f5f9 !important; }
+  .dark .text-slate-800 { color: #f8fafc !important; }
+}
+
+

@@ -1,0 +1,57 @@
+{
+  "entities": {
+    "Booking": {
+      "title": "Booking",
+      "description": "Represents a completed or pending reservation for an apartment.",
+      "type": "object",
+      "properties": {
+        "apartmentId": {
+          "type": "string",
+          "description": "ID of the apartment (e.g., 'nautilus' or 'valefurado')"
+        },
+        "customerName": {
+          "type": "string"
+        },
+        "customerEmail": {
+          "type": "string"
+        },
+        "customerPhone": {
+          "type": "string"
+        },
+        "checkIn": {
+          "type": "string",
+          "format": "date",
+          "description": "YYYY-MM-DD"
+        },
+        "checkOut": {
+          "type": "string",
+          "format": "date",
+          "description": "YYYY-MM-DD"
+        },
+        "totalPrice": {
+          "type": "number"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "confirmed", "cancelled"],
+          "description": "Status of the booking."
+        },
+        "stripeSessionId": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "integer"
+        }
+      },
+      "required": ["apartmentId", "customerName", "customerEmail", "checkIn", "checkOut", "status", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/bookings/{bookingId}": {
+      "schema": {
+        "$ref": "#/entities/Booking"
+      },
+      "description": "Stores all reservations."
+    }
+  }
+}
