@@ -16,18 +16,32 @@ function getDb() {
   if (db) return db;
   
   let firebaseConfig;
-  try {
-    const configPath = path.join(process.cwd(), 'firebase-applet-config.json');
-    if (fs.existsSync(configPath)) {
-      const configString = fs.readFileSync(configPath, 'utf-8');
-      firebaseConfig = JSON.parse(configString);
+
+  // Próba załadowania ze zmiennej środowiskowej (np. na Render)
+  if (process.env.FIREBASE_CONFIG) {
+    try {
+      firebaseConfig = JSON.parse(process.env.FIREBASE_CONFIG);
+    } catch (e) {
+      console.error("Nie można sparsować FIREBASE_CONFIG ze zmiennych środowiskowych:", e);
     }
-  } catch (e) {
-    console.error("Nie można załadować firebase-applet-config.json w backendzie:", e);
+  } else {
+    // Fallback: lokalny plik z AI Studio
+    try {
+      const configPath = path.join(process.cwd(), 'firebase-applet-config.json');
+      if (fs.existsSync(configPath)) {
+        const configString = fs.readFileSync(configPath, 'utf-8');
+        firebaseConfig = JSON.parse(configString);
+      }
+    } catch (e) {
+      console.error("Nie można załadować firebase-applet-config.json w backendzie:", e);
+    }
   }
 
   if (!firebaseConfig) {
-    throw new Error("Firebase configuration not found. Cannot initialize Firestore.");
+    console.warn("Brak konfiguracji Firebase. Zapis rezerwacji do bazy nie będzie działał. Skonfiguruj zmienną FIREBASE_CONFIG.");
+    // Nie rzucamy wyjątku na starcie, jeśli to tylko błąd przy wywołaniu.
+    // Aby nie zatrzymać serwera, ale rzucić przy użyciu:
+    throw new Error("Firebase configuration not found.");
   }
 
   firebaseApp = initializeApp(firebaseConfig);
@@ -119,6 +133,82 @@ async function startServer() {
   });
 
   app.use(express.json());
+
+  // API Czatbota Gemini
+  app.post("/api/chat", async (req, res) => {
+    try {
+      const { messages, userText, language } = req.body;
+      
+      const apiKey = process.env.GEMINI_API_KEY;
+      if (!apiKey) {
+        return res.status(500).json({ error: "Brak skonfigurowanego klucza GEMINI_API_KEY w zmiennych środowiskowych serwera." });
+      }
+
+      const { GoogleGenAI } = await import("@google/genai");
+      const ai = new GoogleGenAI({ apiKey });
+
+      const getSystemInstruction = (lang: string) => `Jesteś profesjonalnym, uprzejmym asystentem wirtualnym (konsjerżem) dla "Rożek Invest" - apartamentów wakacyjnych w Portugalii.
+Twoje odpowiedzi muszą być BARDZO ZWIĘZŁE, a zarazem profesjonalne, kulturalne i entuzjastyczne, tak aby klient szybko i sprawnie uzyskał potrzebne informacje. Twoją rolą jest zachęcenie do wynajmu i rozwianie wątpliwości. Odpowiadaj krótko i na temat.
+Masz dostęp do narzędzia wyszukiwania w Google. Używaj go, aby odpowiadać na pytania dotyczące okolicy, atrakcji turystycznych (np. "ile jest kościołów w okolicy", "gdzie zjeść w pobliżu"), lotów czy innych obiektywnych informacji nawiązujących do regionu Rożek Invest i Portugalii.
+Jeśli po przeanalizowaniu dostępnych danych nadal czegoś nie wiesz, uprzejmie poinformuj, że nie znasz odpowiedzi na to pytanie. Zachęć jednocześnie klienta do kontaktu bezpośredniego z gospodarzem w celu uzyskania szczegółowych informacji - pod adresem e-mail: barbara@rozek.pl lub pod numerem telefonu: +48 600 323 472, bądź przez formularz kontaktowy na stronie.
+
+Informacje o apartamentach:
+Mamy dwa apartamenty w regionie Rożek Invest (Srebrne Wybrzeże) w Portugalii:
+1. Nautilus (São Martinho do Porto):
+- Przestronny apartament z 2 sypialniami na parterze.
+- 1 łazienka.
+- Przeznaczony dla maksymalnie 4 osób.
+- Jasny salon, otwarta kuchnia, prywatny taras.
+- Dostęp do wspólnego basenu oraz miejsce parkingowe w garażu podziemnym.
+- Cena: od 79 € / noc.
+
+2. Vale Furado (Vale Furado, Pataias):
+- Rewelacyjny apartament typu T2 (2 sypialnie).
+- 1 łazienka.
+- Równie urokliwy, świetna baza do odkrywania Portugalii.
+- Cena: od 87 € / noc.
+
+Udogodnienia ogólne obu apartamentów:
+- Szybkie Wi-Fi
+- Bezpłatny parking
+- W pełni wyposażona kuchnia
+- Smart TV
+- Klimatyzacja
+- Ręczniki i suszarka do włosów
+- Blisko morza, spokojna okolica, idealne dla rodzin i par.
+
+Zasady i opłaty:
+- Palenie jest zabronione.
+- Zwierzęta - po uzgodnieniu (klient musi zapytać).
+- Do każdego pobytu dodawana jest jednorazowa opłata za sprzątanie w wysokości 140 €.
+- Odpowiedzi formułuj zwięźle, w sposób naturalny dla czatu. Zwykle odpowiedź powinna mieć 1-3 krótkie akapity. Nie twórz sztucznych list, chyba że klient o to prosi. 
+- Mów w języku docelowym strony internetowej (aktualnie: ${language || 'pl'}), chyba że klient zadaje pytanie lub używa innego języka - wtedy bezwzględnie odpowiadaj w języku klienta.`;
+
+      const contents = (messages || []).map((m: any) => ({
+        role: m.role,
+        parts: [{ text: m.text }]
+      }));
+      contents.push({
+        role: "user",
+        parts: [{ text: userText }]
+      });
+
+      const response = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: contents,
+        config: {
+          systemInstruction: getSystemInstruction(language || 'pl'),
+          temperature: 0.7,
+          tools: [{ googleSearch: {} }]
+        }
+      });
+
+      res.json({ text: response.text });
+    } catch (error: any) {
+      console.error("Błąd API czatu Gemini:", error);
+      res.status(500).json({ error: "Przepraszam, mam w tej chwili problemy techniczne." });
+    }
+  });
 
   // Zabezpieczone API do pobierania rezerwacji bez ujawniania danych osobowych
   app.get("/api/bookings/:apartmentId", async (req, res) => {

@@ -1,53 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import { MessageCircle, X, Send, Minus } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import { GoogleGenAI } from "@google/genai";
 import { useLanguage } from "../context/LanguageContext";
-
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 interface Message {
   id: string;
   role: "user" | "model";
   text: string;
 }
-
-const getSystemInstruction = (lang: string) => `Jesteś profesjonalnym, uprzejmym asystentem wirtualnym (konsjerżem) dla "Rożek Invest" - apartamentów wakacyjnych w Portugalii.
-Twoje odpowiedzi muszą być BARDZO ZWIĘZŁE, a zarazem profesjonalne, kulturalne i entuzjastyczne, tak aby klient szybko i sprawnie uzyskał potrzebne informacje. Twoją rolą jest zachęcenie do wynajmu i rozwianie wątpliwości. Odpowiadaj krótko i na temat.
-Masz dostęp do narzędzia wyszukiwania w Google. Używaj go, aby odpowiadać na pytania dotyczące okolicy, atrakcji turystycznych (np. "ile jest kościołów w okolicy", "gdzie zjeść w pobliżu"), lotów czy innych obiektywnych informacji nawiązujących do regionu Rożek Invest i Portugalii.
-Jeśli po przeanalizowaniu dostępnych danych nadal czegoś nie wiesz, uprzejmie poinformuj, że nie znasz odpowiedzi na to pytanie. Zachęć jednocześnie klienta do kontaktu bezpośredniego z gospodarzem w celu uzyskania szczegółowych informacji - pod adresem e-mail: barbara@rozek.pl lub pod numerem telefonu: +48 600 323 472, bądź przez formularz kontaktowy na stronie.
-
-Informacje o apartamentach:
-Mamy dwa apartamenty w regionie Rożek Invest (Srebrne Wybrzeże) w Portugalii:
-1. Nautilus (São Martinho do Porto):
-- Przestronny apartament z 2 sypialniami na parterze.
-- 1 łazienka.
-- Przeznaczony dla maksymalnie 4 osób.
-- Jasny salon, otwarta kuchnia, prywatny taras.
-- Dostęp do wspólnego basenu oraz miejsce parkingowe w garażu podziemnym.
-- Cena: od 79 € / noc.
-
-2. Vale Furado (Vale Furado, Pataias):
-- Rewelacyjny apartament typu T2 (2 sypialnie).
-- 1 łazienka.
-- Równie urokliwy, świetna baza do odkrywania Portugalii.
-- Cena: od 87 € / noc.
-
-Udogodnienia ogólne obu apartamentów:
-- Szybkie Wi-Fi
-- Bezpłatny parking
-- W pełni wyposażona kuchnia
-- Smart TV
-- Klimatyzacja
-- Ręczniki i suszarka do włosów
-- Blisko morza, spokojna okolica, idealne dla rodzin i par.
-
-Zasady i opłaty:
-- Palenie jest zabronione.
-- Zwierzęta - po uzgodnieniu (klient musi zapytać).
-- Do każdego pobytu dodawana jest jednorazowa opłata za sprzątanie w wysokości 140 €.
-- Odpowiedzi formułuj zwięźle, w sposób naturalny dla czatu. Zwykle odpowiedź powinna mieć 1-3 krótkie akapity. Nie twórz sztucznych list, chyba że klient o to prosi. 
-- Mów w języku docelowym strony internetowej (aktualnie: ${lang}), chyba że klient zadaje pytanie lub używa innego języka - wtedy bezwzględnie odpowiadaj w języku klienta.`;
 
 export function Chatbot() {
   const { t, language } = useLanguage();
@@ -104,42 +64,28 @@ export function Chatbot() {
     setIsLoading(true);
 
     try {
-      // Skonstruuj historię dla modelu (bez wiadomości powitalnej, jeśli chcesz uprościć, ale lepiej z nią)
+      const apiBase = import.meta.env.VITE_API_URL || "";
       const chatHistory = messages.filter(m => m.id !== "welcome").map(m => ({
         role: m.role,
-        parts: [{ text: m.text }]
+        text: m.text
       }));
 
-      // Inicjalizacja chatu
-      const chat = ai.chats.create({
-        model: "gemini-3-flash-preview",
-        config: {
-          systemInstruction: getSystemInstruction(language),
-        }
+      const res = await fetch(`${apiBase}/api/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: chatHistory,
+          userText,
+          language
+        })
       });
 
-      // Zbudowanie poprzedniego kontekstu w API (jeśli jest taka opcja, ale prościej wywołać generateContent wieloczęściowo, albo po prostu generateContent dla pojedynczego prompta z historią, ale w genai SDK trzeba używać 'chat'). Zróbmy 'generateContent' z przekazaniem contents array:
-      
-      const contents = messages.map(m => ({
-        role: m.role,
-        parts: [{ text: m.text }]
-      }));
-      contents.push({
-        role: "user",
-        parts: [{ text: userText }]
-      });
+      if (!res.ok) {
+        throw new Error("Błąd sieci");
+      }
 
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: contents,
-        config: {
-          systemInstruction: getSystemInstruction(language),
-          temperature: 0.7,
-          tools: [{ googleSearch: {} }]
-        }
-      });
-
-      const botText = response.text || t("chat.error") || "Przepraszam, coś poszło nie tak.";
+      const data = await res.json();
+      const botText = data.text || t("chat.error") || "Przepraszam, coś poszło nie tak.";
 
       setMessages((prev) => [
         ...prev,
