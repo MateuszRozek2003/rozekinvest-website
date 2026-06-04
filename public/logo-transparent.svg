@@ -1,34 +1,40 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="100%" height="100%">
-  <defs>
-    <style>
-      .crest-gold { fill: none; stroke: #C5A880; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
-    </style>
-  </defs>
-  <g transform="translate(-10, 15)">
-    <!-- Gold architectural lines -->
-    <path d="M 68,70 L 68,110 M 78,80 L 78,110 M 88,90 L 88,110" class="crest-gold" />
-    <path d="M 68,70 L 88,90" class="crest-gold" />
+<!doctype html>
+<html lang="pl" style="color-scheme: light;">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rożek Invest | Apartamenty na wynajem w Portugalii</title>
+    <meta name="description" content="Profesjonalna strona internetowa dla prywatnych apartamentów wakacyjnych w Portugalii." />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Rożek Invest | Apartamenty na wynajem w Portugalii" />
+    <meta property="og:description" content="Wynajmij nowoczesny, luksusowy apartament w Portugalii (Silver Coast). Rezerwuj w najlepszej cenie!" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content="Rożek Invest | Apartamenty na wynajem w Portugalii" />
+    <meta property="twitter:description" content="Wynajmij nowoczesny, luksusowy apartament w Portugalii (Silver Coast). Rezerwuj w najlepszej cenie!" />
 
-    <!-- Swooshes -->
-    <path d="M 28,115 C 44,106 58,110 74,115 C 96,123 120,132 148,132 C 164,132 178,126 194,115 C 178,125 164,135 148,135 C 120,135 96,125 74,117 C 58,112 44,108 28,115 Z" fill="#000000" />
-    <path d="M 38,125 C 54,116 68,120 84,125 C 106,133 130,142 158,142 C 174,142 188,136 204,125 C 188,135 174,145 158,145 C 130,145 106,135 84,127 C 68,122 54,118 38,125 Z" fill="#C5A880" />
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "RealEstateAgent",
+        "name": "Rożek Invest",
+        "image": "https://rozekinvest.com/logo-black-new.png",
+        "description": "Profesjonalna strona internetowa dla prywatnych apartamentów wakacyjnych w Portugalii, z obsługą wielu języków i nowoczesnym designem.",
+        "address": {
+          "@type": "PostalAddress",
+          "addressCountry": "PT"
+        }
+      }
+    </script>
+    <script type="module" crossorigin src="/assets/index-D7zeH_Ik.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-C3PCnrZ-.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
 
-    <!-- Letter R -->
-    <path d="M 58,25 L 68,25 L 68,110 L 58,110 Z" fill="#000000" />
-    <!-- Serifs top R -->
-    <path d="M 52,25 L 74,25 L 72,28 L 54,28 Z" fill="#000000" />
-    <!-- Serifs bottom R -->
-    <path d="M 52,110 L 74,110 L 72,107 L 54,107 Z" fill="#000000" />
-    <!-- R loop -->
-    <path d="M 68,25 C 94,25 108,35 108,55 C 108,75 94,85 68,85 L 68,82 C 86,82 100,73 100,55 C 100,37 86,28 68,28 Z" fill="#000000" />
-    <!-- R leg -->
-    <path d="M 76,85 C 80,100 86,110 102,118 C 96,114 88,103 84,93 C 81,85 79,83 76,84 Z" fill="#000000" />
-
-    <!-- Letter I -->
-    <path d="M 112,60 L 122,60 L 122,112 L 112,112 Z" fill="#000000" />
-    <!-- Serifs top I -->
-    <path d="M 106,60 L 128,60 L 126,63 L 108,63 Z" fill="#000000" />
-    <!-- Serifs bottom I -->
-    <path d="M 106,112 L 128,112 L 126,109 L 108,109 Z" fill="#000000" />
-  </g>
-</svg>

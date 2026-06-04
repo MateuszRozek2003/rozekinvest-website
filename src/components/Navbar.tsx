@@ -55,9 +55,9 @@ export function Navbar({ onNavigate }: { onNavigate?: (hash: string) => void }) 
         <div className="flex items-center justify-between">
           <a href="#" onClick={(e) => handleNavClick(e, "#")} className="flex-shrink-0 flex items-center mt-2 relative hover:opacity-80 transition-opacity transform origin-left md:scale-110">
             <img 
-              src="/logo-transparent.svg" 
+              src="/logo-black-new.png" 
               alt="Rożek Invest" 
-              className="h-[80px] sm:h-[100px] w-auto object-contain transition-opacity duration-300" 
+              className="h-[80px] sm:h-[100px] w-auto object-contain transition-opacity duration-300 mix-blend-multiply" 
             />
           </a>
 
@@ -97,8 +97,22 @@ export function Navbar({ onNavigate }: { onNavigate?: (hash: string) => void }) 
             </div>
           </div>
 
-          {/* Mobile menu button */}
-          <div className="md:hidden flex items-center gap-4">
+          {/* Mobile menu button and language switch */}
+          <div className="md:hidden flex items-center gap-2">
+            <div className="flex bg-brand-sand p-[2px] rounded-full text-[9px] sm:text-[10px] font-medium mr-1 items-center">
+              {(["pt", "en", "pl", "es", "fr", "de"] as Language[]).map((lang) => (
+                <button
+                  key={lang}
+                  onClick={() => setLanguage(lang)}
+                  className={cn(
+                    "px-[5px] py-1 rounded-full transition-all flex-shrink-0 leading-none",
+                    language === lang ? "bg-white shadow-sm text-brand-navy" : "text-brand-navy hover:bg-white/50"
+                  )}
+                >
+                  {lang.toUpperCase()}
+                </button>
+              ))}
+            </div>
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="p-1 text-brand-navy"
@@ -126,22 +140,7 @@ export function Navbar({ onNavigate }: { onNavigate?: (hash: string) => void }) 
                 {link.label}
               </a>
             ))}
-            <div className="flex items-center justify-between border-t border-slate-100 pt-4 mt-2">
-              <div className="flex bg-brand-sand p-1 rounded-full text-[12px] font-medium">
-                {(["pt", "en", "pl", "es", "fr", "de"] as Language[]).map((lang) => (
-                  <button
-                    key={lang}
-                    onClick={() => setLanguage(lang)}
-                    className={cn(
-                      "px-[10px] py-1 rounded-[15px] transition-all",
-                      language === lang ? "bg-white shadow-sm text-brand-navy" : "text-brand-navy hover:bg-white/50"
-                    )}
-                  >
-                    {lang.toUpperCase()}
-                  </button>
-                ))}
-              </div>
-            </div>
+
             <Button onClick={(e) => { setIsOpen(false); handleNavClick(e as any, '#contact'); }} className="w-full">
               {t("nav.ask")}
             </Button>

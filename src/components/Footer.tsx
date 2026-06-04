@@ -31,9 +31,9 @@ export function Footer({ onNavigate }: { onNavigate?: (hash: string) => void }) 
           <div className="md:col-span-2 flex flex-col items-center md:items-start text-center md:text-left">
             <div className="mb-6 -ml-4 relative">
               <img 
-                src="/logo-transparent.svg" 
+                src="/logo-black-new.png" 
                 alt="Rożek Invest" 
-                className="h-40 sm:h-48 w-auto object-contain transition-opacity duration-300" 
+                className="h-40 sm:h-48 w-auto object-contain transition-opacity duration-300 mix-blend-multiply" 
               />
             </div>
             <p className="text-brand-navy/70 font-light leading-relaxed max-w-sm text-[14px]">
