@@ -28,7 +28,7 @@ export const nautilusApartmentImages = [
 // (Wyświetlane na stronie głównej w karcie "Vale Furado" i po kliknięciu "Powiększ")
 // ----------------------------------------------------------------------
 export const valefuradoApartmentImages = [
-"/20V.jpg",
+"20.jpg",
   "/2V.jpg",
   "/3V.jpg",
   "/4V.jpg",

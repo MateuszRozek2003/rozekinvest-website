@@ -33,7 +33,7 @@ export function Footer({ onNavigate }: { onNavigate?: (hash: string) => void }) 
               <img 
                 src="/logo-black-new.png" 
                 alt="Rożek Invest" 
-                className="h-40 sm:h-48 w-auto object-contain transition-opacity duration-300 mix-blend-multiply" 
+                className="h-40 sm:h-48 w-auto object-contain transition-opacity duration-300" 
               />
             </div>
             <p className="text-brand-navy/70 font-light leading-relaxed max-w-sm text-[14px]">
