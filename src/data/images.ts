@@ -63,16 +63,11 @@ export const nautilusSurroundingsImages = [
 // (Wyświetlane w "Galerii" na dole oraz w dziale "Szczegóły apartamentu")
 // ----------------------------------------------------------------------
 export const valefuradoSurroundingsImages = [
-  "/Praia_de_Vale_Furado_-_Portugal_(27648345794).jpg",
-  "/Praia de Vale Furado.jpg",
-  "/dreamstime_xxl_57375257.jpg",
-  "/pexels-cruz-in-portugal-33831713.jpg",
-  "/pexels-sunnykote-34168800.jpg",
-  "/pexels-rodolfobarreto-20143200.jpg",
-  "/Armeria_welwitschii_kz08.jpg",
-  "/Praia_de_Vale_Furado_-_Portugal_(25014377844).jpg",
-  "/Praia_de_Vale_Furado_-_Portugal_(28983863653).jpg",
-  "/Litoral_entre_a_Praia_de_Paredes_da_Vitória_e_a_Praia_do_Vale_Furado_-_Portugal_(25644914035).jpg",
-  "/Ammophila_arenaria_kz09.jpg",
-  "/Carpobrotus_edulis_kz09.jpg"
+"/O6V.jpg",
+  "/O7V.jpg",
+  "/O8V.jpg",
+  "/O9V.jpg",
+  "/O10V.jpg",
+  "/O11V.jpg",
+  "/O12V.jpg"
 ];
