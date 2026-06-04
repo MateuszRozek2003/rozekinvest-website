@@ -55,7 +55,7 @@ export function Navbar({ onNavigate }: { onNavigate?: (hash: string) => void }) 
         <div className="flex items-center justify-between">
           <a href="#" onClick={(e) => handleNavClick(e, "#")} className="flex-shrink-0 flex items-center mt-2 relative hover:opacity-80 transition-opacity transform origin-left md:scale-110">
             <img 
-              src="/logo-transparent.png" 
+              src="logo-transparent.png" 
               alt="Rożek Invest" 
               className="h-[80px] sm:h-[100px] w-auto object-contain transition-opacity duration-300 mix-blend-multiply" 
             />
